@@ -1,4 +1,4 @@
-import { DEFAULT_MODELS, ServiceProvider } from "../constant";
+import { ServiceProvider } from "../constant";
 import { LLMModel } from "../client/api";
 
 const CustomSeq = {
@@ -199,7 +199,7 @@ export function isModelAvailableInServer(
   providerName: string,
 ) {
   const fullName = `${modelName}@${providerName}`;
-  const modelTable = collectModelTable(DEFAULT_MODELS, customModels);
+  const modelTable = collectModelTable([], customModels);
   return modelTable[fullName]?.available === false;
 }
 
