@@ -1499,6 +1499,25 @@ export function Settings() {
       </>
   );
 
+  const customApiConfigComponent = (
+    <ListItem
+      title="API密钥"
+      subTitle="输入你的API密钥"
+    >
+      <PasswordInput
+        aria-label="API密钥"
+        value={accessStore.customApiKey}
+        type="text"
+        placeholder="sk-..."
+        onChange={(e) => {
+          accessStore.update(
+            (access) => (access.customApiKey = e.currentTarget.value),
+          );
+        }}
+      />
+    </ListItem>
+  );
+
   return (
     <ErrorBoundary>
       <div className="window-header" data-tauri-drag-region>
@@ -1821,51 +1840,7 @@ export function Settings() {
 
           {!accessStore.hideUserApiKey && (
             <>
-              {useCustomConfigComponent}
-
-              {accessStore.useCustomConfig && (
-                <>
-                  <ListItem
-                    title={Locale.Settings.Access.Provider.Title}
-                    subTitle={Locale.Settings.Access.Provider.SubTitle}
-                  >
-                    <Select
-                      aria-label={Locale.Settings.Access.Provider.Title}
-                      value={accessStore.provider}
-                      onChange={(e) => {
-                        accessStore.update(
-                          (access) =>
-                            (access.provider = e.target
-                              .value as ServiceProvider),
-                        );
-                      }}
-                    >
-                      {Object.entries(ServiceProvider).map(([k, v]) => (
-                        <option value={v} key={k}>
-                          {k}
-                        </option>
-                      ))}
-                    </Select>
-                  </ListItem>
-
-                  {openAIConfigComponent}
-                  {azureConfigComponent}
-                  {googleConfigComponent}
-                  {anthropicConfigComponent}
-                  {baiduConfigComponent}
-                  {byteDanceConfigComponent}
-                  {alibabaConfigComponent}
-                  {tencentConfigComponent}
-                  {moonshotConfigComponent}
-                  {deepseekConfigComponent}
-                  {stabilityConfigComponent}
-                  {lflytekConfigComponent}
-                  {XAIConfigComponent}
-                  {chatglmConfigComponent}
-                  {siliconflowConfigComponent}
-                  {ai302ConfigComponent}
-                </>
-              )}
+              {customApiConfigComponent}
             </>
           )}
 

@@ -240,7 +240,7 @@ export function isModelNotavailableInServer(
     return true;
   }
 
-  const modelTable = collectModelTable(DEFAULT_MODELS, customModels);
+  const modelTable = collectModelTable([], customModels);
 
   const providerNamesArray = Array.isArray(providerNames)
     ? providerNames

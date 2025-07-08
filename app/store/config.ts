@@ -61,11 +61,11 @@ export const DEFAULT_CONFIG = {
   hideBuiltinMasks: false, // dont add builtin masks
 
   customModels: "",
-  models: DEFAULT_MODELS as any as LLMModel[],
+  models: [] as LLMModel[],
 
   modelConfig: {
     model: "gpt-4o-mini" as ModelType,
-    providerName: "OpenAI" as ServiceProvider,
+    providerName: ServiceProvider.CustomAPI,
     temperature: 0.5,
     top_p: 1,
     max_tokens: 4000,
@@ -94,7 +94,7 @@ export const DEFAULT_CONFIG = {
 
   realtimeConfig: {
     enable: false,
-    provider: "OpenAI" as ServiceProvider,
+    provider: ServiceProvider.CustomAPI,
     model: "gpt-4o-realtime-preview-2024-10-01",
     apiKey: "",
     azure: {

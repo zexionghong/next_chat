@@ -253,7 +253,7 @@ export class Ai302Api implements LLMApi {
 
   async models(): Promise<LLMModel[]> {
     if (this.disableListModels) {
-      return DEFAULT_MODELS.slice();
+      return [];
     }
 
     const res = await fetch(this.path(AI302.ListModelPath), {
