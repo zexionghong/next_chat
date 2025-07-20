@@ -1,4 +1,5 @@
-import { BAIDU_OATUH_URL } from "../constant";
+// Hardcoded Baidu OAuth URL since constant doesn't exist
+const BAIDU_OATUH_URL = "https://aip.baidubce.com/oauth/2.0/token";
 /**
  * 使用 AK，SK 生成鉴权签名（Access Token）
  * @return 鉴权签名信息

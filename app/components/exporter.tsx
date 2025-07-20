@@ -313,7 +313,7 @@ export function PreviewActions(props: {
   const onRenderMsgs = (msgs: ChatMessage[]) => {
     setShouldExport(false);
 
-    const api: ClientApi = getClientApi(config.modelConfig.providerName);
+    const api: ClientApi = getClientApi(); // Simplified - no provider parameter needed
 
     api
       .share(msgs)

@@ -1,4 +1,4 @@
-import { type OpenAIListModelResponse } from "@/app/client/platforms/openai";
+import { type OpenAIListModelResponse } from "@/app/client/platforms/custom";
 import { getServerSideConfig } from "@/app/config/server";
 import { ModelProvider, CustomAPI } from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";

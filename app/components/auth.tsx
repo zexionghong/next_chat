@@ -34,7 +34,7 @@ export function AuthPage() {
 
   const resetAccessCode = () => {
     accessStore.update((access) => {
-      access.openaiApiKey = "";
+      access.customApiKey = "";
       access.accessCode = "";
     });
   }; // Reset access code to empty string
@@ -84,25 +84,25 @@ export function AuthPage() {
             style={{ marginTop: "3vh", marginBottom: "3vh" }}
             aria={Locale.Settings.ShowPassword}
             aria-label={Locale.Settings.Access.OpenAI.ApiKey.Placeholder}
-            value={accessStore.openaiApiKey}
+            value={accessStore.customApiKey}
             type="text"
-            placeholder={Locale.Settings.Access.OpenAI.ApiKey.Placeholder}
+            placeholder="sk-..."
             onChange={(e) => {
               accessStore.update(
-                (access) => (access.openaiApiKey = e.currentTarget.value),
+                (access) => (access.customApiKey = e.currentTarget.value),
               );
             }}
           />
           <PasswordInput
             style={{ marginTop: "3vh", marginBottom: "3vh" }}
             aria={Locale.Settings.ShowPassword}
-            aria-label={Locale.Settings.Access.Google.ApiKey.Placeholder}
-            value={accessStore.googleApiKey}
+            aria-label="API Key"
+            value={accessStore.customApiKey}
             type="text"
-            placeholder={Locale.Settings.Access.Google.ApiKey.Placeholder}
+            placeholder="API Key"
             onChange={(e) => {
               accessStore.update(
-                (access) => (access.googleApiKey = e.currentTarget.value),
+                (access) => (access.customApiKey = e.currentTarget.value),
               );
             }}
           />

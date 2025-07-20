@@ -1,5 +1,4 @@
 import {
-  Stability,
   StoreKey,
   ACCESS_CODE_PREFIX,
   ApiPath,
@@ -64,11 +63,11 @@ export const useSdStore = createPersistStore<
       },
       stabilityRequestCall(data: any) {
         const accessStore = useAccessStore.getState();
-        let prefix: string = ApiPath.Stability as string;
+        let prefix: string = "/api/stability"; // Hardcoded since Stability is not supported
         let bearerToken = "";
         if (accessStore.useCustomConfig) {
-          prefix = accessStore.stabilityUrl || (ApiPath.Stability as string);
-          bearerToken = getBearerToken(accessStore.stabilityApiKey);
+          prefix = "/api/stability"; // Simplified
+          bearerToken = getBearerToken(accessStore.customApiKey);
         }
         if (!bearerToken && accessStore.enabledAccessControl()) {
           bearerToken = getBearerToken(
@@ -79,7 +78,7 @@ export const useSdStore = createPersistStore<
           Accept: "application/json",
           Authorization: bearerToken,
         };
-        const path = `${prefix}/${Stability.GeneratePath}/${data.model}`;
+        const path = `${prefix}/generate/${data.model}`; // Simplified path
         const formData = new FormData();
         for (let paramsKey in data.params) {
           formData.append(paramsKey, data.params[paramsKey]);

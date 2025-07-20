@@ -36,13 +36,13 @@ export async function handle(
   // if dalle3 use openai api key
     const baseUrl = req.headers.get("x-base-url");
     if (baseUrl?.includes("api.openai.com")) {
-      if (!serverConfig.apiKey) {
+      if (!serverConfig.customApiKey) {
         return NextResponse.json(
-          { error: "OpenAI API key not configured" },
+          { error: "API key not configured" },
           { status: 500 },
         );
       }
-      headers.set("Authorization", `Bearer ${serverConfig.apiKey}`);
+      headers.set("Authorization", `Bearer ${serverConfig.customApiKey}`);
     }
 
   const controller = new AbortController();

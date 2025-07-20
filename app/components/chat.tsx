@@ -1293,7 +1293,7 @@ function _Chat() {
       setSpeechStatus(false);
     } else {
       var api: ClientApi;
-      api = new ClientApi(ModelProvider.GPT);
+      api = new ClientApi(); // Simplified - no provider parameter needed
       const config = useAppConfig.getState();
       setSpeechLoading(true);
       ttsPlayer.init();
@@ -1474,11 +1474,11 @@ function _Chat() {
             if (!res) return;
             if (payload.key) {
               accessStore.update(
-                (access) => (access.openaiApiKey = payload.key!),
+                (access) => (access.customApiKey = payload.key!),
               );
             }
             if (payload.url) {
-              accessStore.update((access) => (access.openaiUrl = payload.url!));
+              accessStore.update((access) => (access.customApiUrl = payload.url!));
             }
             accessStore.update((access) => (access.useCustomConfig = true));
           });

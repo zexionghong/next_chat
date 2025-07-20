@@ -1,65 +1,69 @@
 import md5 from "spark-md5";
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSideConfig } from "@/app/config/server";
+import { promises as fs } from "fs";
+import path from "path";
 
-async function handle(req: NextRequest, res: NextResponse) {
-  const serverConfig = getServerSideConfig();
-  const storeUrl = () =>
-    `https://api.cloudflare.com/client/v4/accounts/${serverConfig.cloudflareAccountId}/storage/kv/namespaces/${serverConfig.cloudflareKVNamespaceId}`;
-  const storeHeaders = () => ({
-    Authorization: `Bearer ${serverConfig.cloudflareKVApiKey}`,
-  });
+// 创建存储目录
+const ARTIFACTS_DIR = path.join(process.cwd(), "artifacts");
+
+async function ensureArtifactsDir() {
+  try {
+    await fs.access(ARTIFACTS_DIR);
+  } catch {
+    await fs.mkdir(ARTIFACTS_DIR, { recursive: true });
+  }
+}
+
+async function handle(req: NextRequest) {
+  await ensureArtifactsDir();
+
   if (req.method === "POST") {
     const clonedBody = await req.text();
     const hashedCode = md5.hash(clonedBody).trim();
-    const body: {
-      key: string;
-      value: string;
-      expiration_ttl?: number;
-    } = {
-      key: hashedCode,
-      value: clonedBody,
-    };
+    const filePath = path.join(ARTIFACTS_DIR, `${hashedCode}.html`);
+
     try {
-      const ttl = parseInt(serverConfig.cloudflareKVTTL as string);
-      if (ttl > 60) {
-        body["expiration_ttl"] = ttl;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    const res = await fetch(`${storeUrl()}/bulk`, {
-      headers: {
-        ...storeHeaders(),
-        "Content-Type": "application/json",
-      },
-      method: "PUT",
-      body: JSON.stringify([body]),
-    });
-    const result = await res.json();
-    console.log("save data", result);
-    if (result?.success) {
+      await fs.writeFile(filePath, clonedBody, "utf-8");
+      console.log("save data", { id: hashedCode, success: true });
+
       return NextResponse.json(
-        { code: 0, id: hashedCode, result },
-        { status: res.status },
+        { code: 0, id: hashedCode, result: { success: true } },
+        { status: 200 },
+      );
+    } catch (error) {
+      console.error("Save data error:", error);
+      return NextResponse.json(
+        { error: true, msg: "Save data error" },
+        { status: 400 },
       );
     }
-    return NextResponse.json(
-      { error: true, msg: "Save data error" },
-      { status: 400 },
-    );
   }
   if (req.method === "GET") {
     const id = req?.nextUrl?.searchParams?.get("id");
-    const res = await fetch(`${storeUrl()}/values/${id}`, {
-      headers: storeHeaders(),
-      method: "GET",
-    });
-    return new Response(res.body, {
-      status: res.status,
-      statusText: res.statusText,
-      headers: res.headers,
-    });
+    if (!id) {
+      return NextResponse.json(
+        { error: true, msg: "Missing id parameter" },
+        { status: 400 },
+      );
+    }
+
+    const filePath = path.join(ARTIFACTS_DIR, `${id}.html`);
+
+    try {
+      const content = await fs.readFile(filePath, "utf-8");
+      return new Response(content, {
+        status: 200,
+        headers: {
+          "Content-Type": "text/html",
+        },
+      });
+    } catch (error) {
+      console.error("Read data error:", error);
+      return NextResponse.json(
+        { error: true, msg: "File not found" },
+        { status: 404 },
+      );
+    }
   }
   return NextResponse.json(
     { error: true, msg: "Invalid request" },
@@ -69,5 +73,3 @@ async function handle(req: NextRequest, res: NextResponse) {
 
 export const POST = handle;
 export const GET = handle;
-
-export const runtime = "edge";

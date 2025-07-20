@@ -139,11 +139,12 @@ function getSummarizeModel(
       ];
     }
   }
-  if (currentModel.startsWith("gemini")) {
-    return [GEMINI_SUMMARIZE_MODEL, ServiceProvider.Google];
-  } else if (currentModel.startsWith("deepseek-")) {
-    return [DEEPSEEK_SUMMARIZE_MODEL, ServiceProvider.DeepSeek];
-  }
+  // Simplified - only CustomAPI supported, use current model for summarization
+  // if (currentModel.startsWith("gemini")) {
+  //   return [GEMINI_SUMMARIZE_MODEL, ServiceProvider.Google];
+  // } else if (currentModel.startsWith("deepseek-")) {
+  //   return [DEEPSEEK_SUMMARIZE_MODEL, ServiceProvider.DeepSeek];
+  // }
 
   return [currentModel, providerName];
 }
@@ -445,7 +446,7 @@ export const useChatStore = createPersistStore(
           ]);
         });
 
-        const api: ClientApi = getClientApi(modelConfig.providerName);
+        const api: ClientApi = getClientApi(); // Simplified - no provider parameter needed
         // make request
         api.llm.chat({
           messages: sendMessages,
@@ -666,7 +667,7 @@ export const useChatStore = createPersistStore(
               session.mask.modelConfig.model,
               session.mask.modelConfig.providerName,
             );
-        const api: ClientApi = getClientApi(providerName as ServiceProvider);
+        const api: ClientApi = getClientApi(); // Simplified - no provider parameter needed
 
         // remove error messages if any
         const messages = session.messages;

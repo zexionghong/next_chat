@@ -110,7 +110,7 @@ export function ModelConfigList(props: {
         ></input>
       </ListItem>
 
-      {props.modelConfig?.providerName == ServiceProvider.Google ? null : (
+      {false ? null : ( // Simplified - always show since Google provider doesn't exist
         <>
           <ListItem
             title={Locale.Settings.PresencePenalty.Title}
