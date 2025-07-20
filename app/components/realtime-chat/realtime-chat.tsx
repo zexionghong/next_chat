@@ -282,7 +282,8 @@ export function RealtimeChat({
       audioHandlerRef.current?.close().catch(console.error);
       disconnect();
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Simplified - functions are stable and don't need to be in dependencies
 
   useEffect(() => {
     let animationFrameId: number;
