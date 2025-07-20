@@ -4,7 +4,6 @@ import { ModelProvider, CustomAPI } from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "./auth";
-import { requestOpenai } from "./common";
 
 const ALLOWED_PATH = new Set([CustomAPI.ChatPath, CustomAPI.ListModelPath]);
 
@@ -118,7 +117,7 @@ async function requestCustomAPI(req: NextRequest) {
 
   try {
     const res = await fetch(fetchUrl, fetchOptions);
-    
+
     // to prevent browser prompt for credentials
     const newHeaders = new Headers(res.headers);
     newHeaders.delete("www-authenticate");

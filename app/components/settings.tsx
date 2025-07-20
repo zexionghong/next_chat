@@ -721,10 +721,7 @@ export function Settings() {
   // All unsupported provider config components removed
 
   const customApiConfigComponent = (
-    <ListItem
-      title="API密钥"
-      subTitle="输入你的API密钥"
-    >
+    <ListItem title="API密钥" subTitle="输入你的API密钥">
       <PasswordInput
         aria-label="API密钥"
         value={accessStore.customApiKey}
@@ -1059,11 +1056,7 @@ export function Settings() {
           {saasStartComponent}
           {accessCodeComponent}
 
-          {!accessStore.hideUserApiKey && (
-            <>
-              {customApiConfigComponent}
-            </>
-          )}
+          {!accessStore.hideUserApiKey && <>{customApiConfigComponent}</>}
 
           {!shouldHideBalanceQuery && !clientConfig?.isApp ? (
             <ListItem

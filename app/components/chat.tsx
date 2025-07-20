@@ -102,7 +102,6 @@ import { useNavigate } from "react-router-dom";
 import {
   CHAT_PAGE_SIZE,
   DEFAULT_TTS_ENGINE,
-  ModelProvider,
   Path,
   REQUEST_TIMEOUT_MS,
   ServiceProvider,
@@ -1478,7 +1477,9 @@ function _Chat() {
               );
             }
             if (payload.url) {
-              accessStore.update((access) => (access.customApiUrl = payload.url!));
+              accessStore.update(
+                (access) => (access.customApiUrl = payload.url!),
+              );
             }
             accessStore.update((access) => (access.useCustomConfig = true));
           });

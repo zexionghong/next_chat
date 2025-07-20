@@ -1,8 +1,4 @@
-import {
-  StoreKey,
-  ACCESS_CODE_PREFIX,
-  ApiPath,
-} from "@/app/constant";
+import { StoreKey, ACCESS_CODE_PREFIX } from "@/app/constant";
 import { getBearerToken } from "@/app/client/api";
 import { createPersistStore } from "@/app/utils/store";
 import { nanoid } from "nanoid";
