@@ -333,10 +333,9 @@ export function supportsCustomSize(model: string): boolean {
 }
 
 export function showPlugins(provider: ServiceProvider, model: string) {
-  if (provider == ServiceProvider.CustomAPI) {
-    return true;
-  }
-  return false;
+  // 让所有模型都支持插件功能
+  // 无论是 CustomAPI 还是其他提供商的模型
+  return true;
 }
 
 export function fetch(
