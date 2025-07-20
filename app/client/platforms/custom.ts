@@ -1,21 +1,12 @@
-import {
-  CustomAPI,
-  REQUEST_TIMEOUT_MS,
-} from "@/app/constant";
+import { CustomAPI, REQUEST_TIMEOUT_MS } from "@/app/constant";
 import { useAppConfig, useChatStore } from "@/app/store";
 
-import {
-  ChatOptions,
-  getHeaders,
-  LLMApi,
-  LLMModel,
-} from "../api";
+import { ChatOptions, getHeaders, LLMApi, LLMModel } from "../api";
 import {
   EventStreamContentType,
   fetchEventSource,
 } from "@fortaine/fetch-event-source";
 import { prettyObject } from "@/app/utils/format";
-import { getMessageTextContent } from "@/app/utils";
 
 export interface OpenAIListModelResponse {
   object: string;
@@ -44,7 +35,7 @@ export class CustomApi implements LLMApi {
   async chat(options: ChatOptions) {
     const messages = options.messages.map((v) => ({
       role: v.role,
-      content: getMessageTextContent(v),
+      content: v.content,
     }));
 
     const modelConfig = {
