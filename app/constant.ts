@@ -9,7 +9,7 @@ export const FETCH_COMMIT_URL = `https://api.github.com/repos/${OWNER}/${REPO}/c
 export const FETCH_TAG_URL = `https://api.github.com/repos/${OWNER}/${REPO}/tags?per_page=1`;
 export const RUNTIME_CONFIG_DOM = "danger-runtime-config";
 
-export const CUSTOM_API_BASE_URL = "https://api.302.ai";
+export const CUSTOM_API_BASE_URL = "https://api-api.718ai.cn";
 
 export const CACHE_URL_PREFIX = "/api/cache";
 export const UPLOAD_URL = `${CACHE_URL_PREFIX}/upload`;
@@ -76,13 +76,13 @@ export const REQUEST_TIMEOUT_MS_FOR_THINKING = REQUEST_TIMEOUT_MS * 5;
 export const EXPORT_MESSAGE_CLASS_NAME = "export-markdown";
 
 export enum ServiceProvider {
-  CustomAPI = "CustomAPI",
+  CustomAPI = "API",
 }
 
 
 
 export enum ModelProvider {
-  CustomAPI = "CustomAPI",
+  CustomAPI = "API",
 }
 
 

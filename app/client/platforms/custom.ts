@@ -22,8 +22,8 @@ export class CustomApi implements LLMApi {
   private disableListModels = false;
 
   path(path: string): string {
-    // Always use 302.ai API
-    const baseUrl = "https://api.302.ai";
+    // Use configured API endpoint
+    const baseUrl = "https://api-dev.718ai.cn";
     console.log("[Proxy Endpoint] ", baseUrl, path);
     return [baseUrl, path].join("/");
   }
@@ -223,13 +223,13 @@ export class CustomApi implements LLMApi {
 
     let seq = 1000;
     return chatModels.map((m) => ({
-      name: m.id,
+      name: m.id.replace(/\s*\([^)]*\)\s*$/, ''), // Remove provider suffix like "(API)"
       available: true,
       sorted: seq++,
       provider: {
-        id: "custom",
-        providerName: "CustomAPI",
-        providerType: "custom",
+        id: "api",
+        providerName: "API",
+        providerType: "api",
         sorted: 16,
       },
     }));
