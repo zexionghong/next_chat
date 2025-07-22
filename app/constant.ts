@@ -79,13 +79,9 @@ export enum ServiceProvider {
   CustomAPI = "API",
 }
 
-
-
 export enum ModelProvider {
   CustomAPI = "API",
 }
-
-
 
 export const CustomAPI = {
   ExampleEndpoint: CUSTOM_API_BASE_URL,

@@ -223,7 +223,7 @@ export class CustomApi implements LLMApi {
 
     let seq = 1000;
     return chatModels.map((m) => ({
-      name: m.id.replace(/\s*\([^)]*\)\s*$/, ''), // Remove provider suffix like "(API)"
+      name: m.id.replace(/\s*\([^)]*\)\s*$/, ""), // Remove provider suffix like "(API)"
       available: true,
       sorted: seq++,
       provider: {
