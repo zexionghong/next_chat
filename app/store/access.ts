@@ -10,6 +10,7 @@ import { createPersistStore } from "../utils/store";
 import { ensure } from "../utils/clone";
 import { DEFAULT_CONFIG } from "./config";
 import { getModelProvider } from "../utils/model";
+import { getApiKeyFromAuth } from "../utils/auth-check";
 
 let fetchState = 0; // 0 not fetch, 1 fetching, 2 done
 
@@ -63,7 +64,23 @@ export const useAccessStore = createPersistStore(
     },
 
     isValidCustomAPI() {
+      // First check if we have an API key from share_code_auth
+      const authApiKey = getApiKeyFromAuth();
+      if (authApiKey) {
+        return true;
+      }
+      // Fallback to the existing custom API key check
       return ensure(get(), ["customApiKey"]);
+    },
+
+    getEffectiveApiKey() {
+      // Prioritize API key from share_code_auth
+      const authApiKey = getApiKeyFromAuth();
+      if (authApiKey) {
+        return authApiKey;
+      }
+      // Fallback to custom API key
+      return get().customApiKey;
     },
 
     isAuthorized() {

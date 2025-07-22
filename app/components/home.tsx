@@ -30,6 +30,7 @@ import { type ClientApi, getClientApi } from "../client/api";
 import { useAccessStore } from "../store";
 import clsx from "clsx";
 import { initializeMcpSystem, isMcpEnabled } from "../mcp/actions";
+import { checkAuthAndRedirect } from "../utils/auth-check";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -77,6 +78,13 @@ const Sd = dynamic(async () => (await import("./sd")).Sd, {
 
 const McpMarketPage = dynamic(
   async () => (await import("./mcp-market")).McpMarketPage,
+  {
+    loading: () => <Loading noLogo />,
+  },
+);
+
+const AuthTest = dynamic(
+  async () => (await import("./auth-test")).AuthTest,
   {
     loading: () => <Loading noLogo />,
   },
@@ -163,6 +171,7 @@ function Screen() {
   const isArtifact = location.pathname.includes(Path.Artifacts);
   const isHome = location.pathname === Path.Home;
   const isAuth = location.pathname === Path.Auth;
+  const isAuthTest = location.pathname === Path.AuthTest;
   const isSd = location.pathname === Path.Sd;
   const isSdNew = location.pathname === Path.SdNew;
 
@@ -183,6 +192,7 @@ function Screen() {
   }
   const renderContent = () => {
     if (isAuth) return <AuthPage />;
+    if (isAuthTest) return <AuthTest />;
     if (isSd) return <Sd />;
     if (isSdNew) return <Sd />;
     return (
@@ -201,6 +211,7 @@ function Screen() {
             <Route path={Path.SearchChat} element={<SearchChat />} />
             <Route path={Path.Chat} element={<Chat />} />
             <Route path={Path.Settings} element={<Settings />} />
+            <Route path={Path.AuthTest} element={<AuthTest />} />
             <Route path={Path.McpMarket} element={<McpMarketPage />} />
           </Routes>
         </WindowContent>
@@ -240,6 +251,24 @@ export function Home() {
   useHtmlLang();
 
   useEffect(() => {
+    console.log("[Home] useEffect started");
+
+    // Skip auth check for test page
+    const currentPath = window.location.pathname;
+    console.log("[Home] Current path:", currentPath);
+
+    if (currentPath === Path.AuthTest) {
+      console.log("[Auth] Skipping auth check for test page");
+    } else {
+      console.log("[Auth] Performing auth check for path:", currentPath);
+      // Check authentication first - redirect if invalid
+      if (!checkAuthAndRedirect()) {
+        console.log("[Auth] Auth check failed, should redirect");
+        return; // Exit early if redirecting
+      }
+      console.log("[Auth] Auth check passed, continuing with app initialization");
+    }
+
     console.log("[Config] got config from build time", getClientConfig());
     useAccessStore.getState().fetch();
 
@@ -256,6 +285,25 @@ export function Home() {
       }
     };
     initMcp();
+
+    // Add visibility change listener to check auth when user returns to tab
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        // Skip auth check for test page
+        const currentPath = window.location.pathname;
+        if (currentPath !== Path.AuthTest) {
+          // Page became visible, check auth again
+          checkAuthAndRedirect();
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Cleanup listener on unmount
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   if (!useHasHydrated()) {
