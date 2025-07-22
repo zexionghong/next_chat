@@ -199,7 +199,8 @@ export function getHeaders(ignoreHeaders: boolean = false) {
 
   function getConfig() {
     const isEnabledAccessControl = accessStore.enabledAccessControl();
-    const apiKey = accessStore.customApiKey;
+    // Use the effective API key which prioritizes share_code_auth API key
+    const apiKey = accessStore.getEffectiveApiKey();
     return {
       apiKey,
       isEnabledAccessControl,

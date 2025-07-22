@@ -61,11 +61,11 @@ export const FunctionToolService = {
     if (authLocation == "header") {
       headers[headerName] = tokenValue;
     }
-    // try using customApiKey for Dalle3 Plugin.
+    // try using effective API key for Dalle3 Plugin.
     if (!tokenValue && plugin.id === "dalle3") {
-      const customApiKey = useAccessStore.getState().customApiKey;
-      if (customApiKey) {
-        headers[headerName] = `Bearer ${customApiKey}`;
+      const effectiveApiKey = useAccessStore.getState().getEffectiveApiKey();
+      if (effectiveApiKey) {
+        headers[headerName] = `Bearer ${effectiveApiKey}`;
       }
     }
     const api = new OpenAPIClientAxios({
