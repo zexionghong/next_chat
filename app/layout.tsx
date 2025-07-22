@@ -44,10 +44,10 @@ export default function RootLayout({
         />
         <link
           rel="manifest"
-          href="/site.webmanifest"
+          href="/chat/site.webmanifest"
           crossOrigin="use-credentials"
         ></link>
-        <script src="/serviceWorkerRegister.js" defer></script>
+        <script src="/chat/serviceWorkerRegister.js" defer></script>
       </head>
       <body>
         {children}

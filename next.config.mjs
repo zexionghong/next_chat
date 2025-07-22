@@ -108,4 +108,8 @@ if (mode !== "export") {
   };
 }
 
+// 添加 basePath 和 assetPrefix 配置
+nextConfig.basePath = '/chat';
+nextConfig.assetPrefix = '/chat';
+
 export default nextConfig;
