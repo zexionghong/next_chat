@@ -140,10 +140,10 @@ export function AuthTest() {
       <div style={{ marginTop: "20px", padding: "10px", backgroundColor: "#f0f0f0" }}>
         <h4>Instructions:</h4>
         <ol>
-          <li>Click "Generate Test Data" to create sample authentication data</li>
-          <li>Click "Save Test Data" to store it in localStorage</li>
-          <li>Click "Refresh Status" to check if authentication is valid</li>
-          <li>Click "Clear Data" to remove authentication data (should trigger redirect)</li>
+          <li>Click &quot;Generate Test Data&quot; to create sample authentication data</li>
+          <li>Click &quot;Save Test Data&quot; to store it in localStorage</li>
+          <li>Click &quot;Refresh Status&quot; to check if authentication is valid</li>
+          <li>Click &quot;Clear Data&quot; to remove authentication data (should trigger redirect)</li>
         </ol>
       </div>
     </div>
