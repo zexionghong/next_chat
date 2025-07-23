@@ -13,7 +13,7 @@ COPY package.json yarn.lock* ./
 # 安装依赖阶段
 FROM base AS deps
 # 安装依赖
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 # 构建阶段
 FROM base AS builder

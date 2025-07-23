@@ -1,39 +1,19 @@
 import {
-  ServiceProvider,
   StoreKey,
-  ApiPath,
-  CUSTOM_API_BASE_URL,
 } from "../constant";
 import { getHeaders } from "../client/api";
 import { getClientConfig } from "../config/client";
 import { createPersistStore } from "../utils/store";
-import { ensure } from "../utils/clone";
-import { DEFAULT_CONFIG } from "./config";
-import { getModelProvider } from "../utils/model";
 import { getApiKeyFromAuth } from "../utils/auth-check";
+
 
 let fetchState = 0; // 0 not fetch, 1 fetching, 2 done
 
-const isApp = getClientConfig()?.buildMode === "export";
-
-// Removed all other provider URLs, only keeping CustomAPI
-
-const DEFAULT_CUSTOM_API_URL = isApp ? CUSTOM_API_BASE_URL : ApiPath.CustomAPI;
-
 const DEFAULT_ACCESS_STATE = {
-  accessCode: "",
-  useCustomConfig: true,
-
-  provider: ServiceProvider.CustomAPI,
-
-  // custom api
-  customApiUrl: DEFAULT_CUSTOM_API_URL,
-  customApiKey: "",
-
   // server config
-  needCode: true,
-  hideUserApiKey: false,
-  hideBalanceQuery: false,
+  needCode: false,
+  hideUserApiKey: true,
+  hideBalanceQuery: true,
   disableGPT4: false,
   disableFastLink: false,
   customModels: "",
@@ -49,49 +29,39 @@ export const useAccessStore = createPersistStore(
 
   (set, get) => ({
     enabledAccessControl() {
-      this.fetch();
-
+      if (fetchState === 0) {
+        this.fetch();
+      }
       return get().needCode;
     },
     getVisionModels() {
-      this.fetch();
+      if (fetchState === 0) {
+        this.fetch();
+      }
       return get().visionModels;
     },
     edgeVoiceName() {
-      this.fetch();
-
+      if (fetchState === 0) {
+        this.fetch();
+      }
       return get().edgeTTSVoiceName;
     },
 
-    isValidCustomAPI() {
-      // First check if we have an API key from share_code_auth
-      const authApiKey = getApiKeyFromAuth();
-      if (authApiKey) {
-        return true;
+
+    isAuthorized() {
+      if (fetchState === 0) {
+        this.fetch();
       }
-      // Fallback to the existing custom API key check
-      return ensure(get(), ["customApiKey"]);
+      return true;
     },
 
     getEffectiveApiKey() {
-      // Prioritize API key from share_code_auth
+      // Get API key from localStorage (share_code_auth)
       const authApiKey = getApiKeyFromAuth();
       if (authApiKey) {
         return authApiKey;
       }
-      // Fallback to custom API key
-      return get().customApiKey;
-    },
-
-    isAuthorized() {
-      this.fetch();
-
-      // has token or has code or disabled access control
-      return (
-        this.isValidCustomAPI() ||
-        !this.enabledAccessControl() ||
-        (this.enabledAccessControl() && ensure(get(), ["accessCode"]))
-      );
+      return "";
     },
     fetch() {
       if (fetchState > 0 || getClientConfig()?.buildMode === "export") return;
@@ -104,16 +74,6 @@ export const useAccessStore = createPersistStore(
         },
       })
         .then((res) => res.json())
-        .then((res) => {
-          const defaultModel = res.defaultModel ?? "";
-          if (defaultModel !== "") {
-            const [model] = getModelProvider(defaultModel);
-            DEFAULT_CONFIG.modelConfig.model = model;
-            DEFAULT_CONFIG.modelConfig.providerName = ServiceProvider.CustomAPI;
-          }
-
-          return res;
-        })
         .then((res: DangerConfig) => {
           console.log("[Config] got config from server", res);
           set(() => ({ ...res }));
@@ -128,19 +88,8 @@ export const useAccessStore = createPersistStore(
   }),
   {
     name: StoreKey.Access,
-    version: 2,
+    version: 3,
     migrate(persistedState, version) {
-      if (version < 2) {
-        const state = persistedState as {
-          token: string;
-          openaiApiKey: string;
-          azureApiVersion: string;
-          googleApiKey: string;
-        };
-        state.openaiApiKey = state.token;
-        state.azureApiVersion = "2023-08-01-preview";
-      }
-
       return persistedState as any;
     },
   },

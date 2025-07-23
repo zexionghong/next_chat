@@ -6,6 +6,7 @@ import {
   getAuthRedirectUrl,
   ShareCodeAuthData 
 } from "../utils/auth-check";
+import { useAccessStore } from "../store";
 
 const storage = safeLocalStorage();
 
@@ -26,6 +27,22 @@ export function AuthTest() {
     
     setAuthStatus(isValid ? "Valid" : "Invalid");
     setApiKey(key);
+  };
+
+  const testAccessStore = () => {
+    try {
+      const accessStore = useAccessStore.getState();
+      const effectiveApiKey = accessStore.getEffectiveApiKey();
+      
+      console.log("=== Access Store API Key Test ===");
+      console.log("Effective API Key from access store:", effectiveApiKey);
+      console.log("Direct API Key from auth-check:", getApiKeyFromAuth());
+      
+      alert(`Access Store API Key: ${effectiveApiKey || "None"}\nDirect API Key: ${getApiKeyFromAuth() || "None"}`);
+    } catch (error) {
+      console.error("Error testing access store:", error);
+      alert("Error testing access store: " + error);
+    }
   };
 
   const createTestData = () => {
@@ -119,6 +136,9 @@ export function AuthTest() {
         </button>
         <button onClick={getCurrentData} style={{ margin: "5px" }}>
           Load Current Data
+        </button>
+        <button onClick={testAccessStore} style={{ margin: "5px", backgroundColor: "#4CAF50", color: "white" }}>
+          Test Access Store
         </button>
       </div>
 

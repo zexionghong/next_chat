@@ -61,7 +61,7 @@ export const FunctionToolService = {
     if (authLocation == "header") {
       headers[headerName] = tokenValue;
     }
-    // try using effective API key for Dalle3 Plugin.
+    // Use API key from localStorage for Dalle3 Plugin
     if (!tokenValue && plugin.id === "dalle3") {
       const effectiveApiKey = useAccessStore.getState().getEffectiveApiKey();
       if (effectiveApiKey) {

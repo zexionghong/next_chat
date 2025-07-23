@@ -1445,11 +1445,7 @@ function _Chat() {
     code: (text) => {
       if (accessStore.disableFastLink) return;
       console.log("[Command] got code from url: ", text);
-      showConfirm(Locale.URLCommand.Code + `code = ${text}`).then((res) => {
-        if (res) {
-          accessStore.update((access) => (access.accessCode = text));
-        }
-      });
+      // Internal system - no need for access code
     },
     settings: (text) => {
       if (accessStore.disableFastLink) return;
@@ -1467,18 +1463,11 @@ function _Chat() {
             Locale.URLCommand.Settings +
               `\n${JSON.stringify(payload, null, 4)}`,
           ).then((res) => {
-            if (!res) return;
-            if (payload.key) {
-              accessStore.update(
-                (access) => (access.customApiKey = payload.key!),
-              );
-            }
+            // Internal system - no need for API key configuration
             if (payload.url) {
-              accessStore.update(
-                (access) => (access.customApiUrl = payload.url!),
-              );
+              // URL configuration might still be needed for internal routing
             }
-            accessStore.update((access) => (access.useCustomConfig = true));
+            // Internal system - configuration handled elsewhere
           });
         }
       } catch {

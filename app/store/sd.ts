@@ -1,10 +1,10 @@
-import { StoreKey, ACCESS_CODE_PREFIX } from "@/app/constant";
-import { getBearerToken } from "@/app/client/api";
+import { StoreKey } from "@/app/constant";
 import { createPersistStore } from "@/app/utils/store";
 import { nanoid } from "nanoid";
 import { uploadImage, base64Image2Blob } from "@/app/utils/chat";
 import { models, getModelParamBasicData } from "@/app/components/sd/sd-panel";
 import { useAccessStore } from "./access";
+import { getBearerToken } from "@/app/client/api";
 
 const defaultModel = {
   name: models[0].name,
@@ -59,16 +59,15 @@ export const useSdStore = createPersistStore<
       },
       stabilityRequestCall(data: any) {
         const accessStore = useAccessStore.getState();
-        let prefix: string = "/api/stability"; // Hardcoded since Stability is not supported
+        let prefix: string = "/api/stability"; // Internal system API
         let bearerToken = "";
-        if (accessStore.useCustomConfig) {
-          prefix = "/api/stability"; // Simplified
-          bearerToken = getBearerToken(accessStore.getEffectiveApiKey());
+        // Get API key from localStorage for internal system
+        const effectiveApiKey = accessStore.getEffectiveApiKey();
+        if (effectiveApiKey) {
+          bearerToken = getBearerToken(effectiveApiKey);
         }
         if (!bearerToken && accessStore.enabledAccessControl()) {
-          bearerToken = getBearerToken(
-            ACCESS_CODE_PREFIX + accessStore.accessCode,
-          );
+          // Access control handled elsewhere for internal system
         }
         const headers = {
           Accept: "application/json",

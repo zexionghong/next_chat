@@ -1,8 +1,5 @@
 import { getClientConfig } from "../config/client";
 import {
-  ACCESS_CODE_PREFIX,
-} from "../constant";
-import {
   ChatMessageTool,
   ChatMessage,
   ModelType,
@@ -198,9 +195,9 @@ export function getHeaders(ignoreHeaders: boolean = false) {
   const clientConfig = getClientConfig();
 
   function getConfig() {
-    const isEnabledAccessControl = accessStore.enabledAccessControl();
-    // Use the effective API key which prioritizes share_code_auth API key
+    // For internal system, get API key from localStorage
     const apiKey = accessStore.getEffectiveApiKey();
+    const isEnabledAccessControl = false; // Disable during config fetch to avoid circular calls
     return {
       apiKey,
       isEnabledAccessControl,
@@ -221,10 +218,6 @@ export function getHeaders(ignoreHeaders: boolean = false) {
 
   if (bearerToken) {
     headers[authHeader] = bearerToken;
-  } else if (isEnabledAccessControl && validString(accessStore.accessCode)) {
-    headers["Authorization"] = getBearerToken(
-      ACCESS_CODE_PREFIX + accessStore.accessCode,
-    );
   }
 
   return headers;
